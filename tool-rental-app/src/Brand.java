@@ -10,12 +10,10 @@ public enum Brand {
 
     private final String brandName;
 
-    // Constructor
     Brand(String brandName) {
         this.brandName = brandName;
     }
 
-    // Getter method
     public String getBrandName() {
         return brandName;
     }

@@ -12,7 +12,7 @@ import java.util.Optional;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
- * This RentalAgreement class represents a rental agreement for a checked out {@link Tool}.
+ * This class represents a rental agreement for a checked out {@link Tool}.
  * An instance of this class is generated upon {@link Tool#checkout}.
  * It contains information about the rented tool, checkout date, rental duration, and discount percentage.
  */
@@ -104,7 +104,7 @@ public class RentalAgreement {
         return Optional.ofNullable(getTool())
                 .map(t -> t.getToolType().getDailyCharge().multiply(BigDecimal.valueOf(calcChargeDays())))
                 .map(c -> c.setScale(2, RoundingMode.HALF_UP))
-                .orElse(null);
+                .orElse(new BigDecimal("0.0"));
     }
 
     private BigDecimal calcDiscountAmount() {
