@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 
 /**
- * A class representing a Tool instance that can be checked out.
+ * This class represents a Tool instance that can be checked out.
  * Each tool has a corresponding tool code, tool type, and brand.
  */
 public class Tool {
@@ -55,7 +55,7 @@ public class Tool {
             throw new IllegalArgumentException("Discount percent must be between 0 and 100");
         }
 
-        // NOTE: instead of passing tool code, I just pass the whole tool object since
+        // NOTE: instead of passing tool code, I just pass the whole tool object
         // so other tool fields can be accessed more seamlessly from the rental agreement.
         return new RentalAgreement(
                 this,

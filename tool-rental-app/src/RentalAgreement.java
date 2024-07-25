@@ -26,6 +26,10 @@ public class RentalAgreement {
 
     private int discountPercentage;
 
+    private int chargeDays;
+
+    private BigDecimal finalCharge;
+
     public RentalAgreement() {
     }
 
@@ -34,6 +38,8 @@ public class RentalAgreement {
         this.checkoutDate = checkoutDate;
         this.rentalDays = rentalDays;
         this.discountPercentage = discountPercentage;
+        this.chargeDays = calcChargeDays();
+        this.finalCharge = calcFinalCharge();
     }
 
     public Tool getTool() {
@@ -68,13 +74,29 @@ public class RentalAgreement {
         this.discountPercentage = discountPercentage;
     }
 
+    public int getChargeDays() {
+        return chargeDays;
+    }
+
+    public void setChargeDays(int chargeDays) {
+        this.chargeDays = chargeDays;
+    }
+
+    public BigDecimal getFinalCharge() {
+        return finalCharge;
+    }
+
+    public void setFinalCharge(BigDecimal finalCharge) {
+        this.finalCharge = finalCharge;
+    }
+
     // --- Calculation methods ---
 
     private LocalDate calcDueDate() {
         return getCheckoutDate().plusDays(getRentalDays());
     }
 
-    private long calcChargeDays() {
+    private int calcChargeDays() {
         // Count of chargeable days, from day after checkout through and including due date
         // Excluding “no charge” days as specified by the tool type
 
@@ -96,24 +118,24 @@ public class RentalAgreement {
             chargeDays -= getHolidaysWithinDateRange(startChargeDate, endChargeDate);
         }
 
-        return chargeDays;
+        return Math.toIntExact(chargeDays);
     }
 
     private BigDecimal calcPreDiscountCharge() {
         // Calculated from charge days * daily charge, rounded half-up to cents
         return Optional.ofNullable(getTool())
-                .map(t -> t.getToolType().getDailyCharge().multiply(BigDecimal.valueOf(calcChargeDays())))
+                .map(t -> t.getToolType().getDailyCharge().multiply(BigDecimal.valueOf(getChargeDays())))
                 .map(c -> c.setScale(2, RoundingMode.HALF_UP))
                 .orElse(new BigDecimal("0.0"));
     }
 
-    private BigDecimal calcDiscountAmount() {
+    // Make public so it's testable
+    public BigDecimal calcDiscountAmount() {
         // Calculated from discount % * pre-discount charge, rounded half-up to cents
         return BigDecimal.valueOf(getDiscountPercentage() * 0.01).multiply(calcPreDiscountCharge()).setScale(2, RoundingMode.HALF_DOWN);
     }
 
-    // Make public so we can test
-    public BigDecimal calcFinalCharge() {
+    private BigDecimal calcFinalCharge() {
         // Calculated from pre discount charge - discount amount
         return calcPreDiscountCharge().subtract(calcDiscountAmount());
     }
@@ -176,11 +198,11 @@ public class RentalAgreement {
         builder.append("Checkout date: ").append(dateFormatter.format(checkoutDate)).append("\n");
         builder.append("Due date: ").append(dateFormatter.format(calcDueDate())).append("\n");
         builder.append("Daily rental charge: ").append(currencyFormatter.format(toolType.getDailyCharge())).append("\n");
-        builder.append("Charge days: ").append(calcChargeDays()).append("\n");
+        builder.append("Charge days: ").append(getChargeDays()).append("\n");
         builder.append("Pre-discount charge: ").append(currencyFormatter.format(calcPreDiscountCharge())).append("\n");
         builder.append("Discount percent: ").append(discountPercentage).append("%").append("\n");
         builder.append("Discount amount: ").append(currencyFormatter.format(calcDiscountAmount())).append("\n");
-        builder.append("Final charge: ").append(currencyFormatter.format(calcFinalCharge())).append("\n");
+        builder.append("Final charge: ").append(currencyFormatter.format(getFinalCharge())).append("\n");
 
         return builder.toString();
     }
