@@ -46,6 +46,17 @@ public class Tool {
         this.brand = brand;
     }
 
+    /**
+     * Generates a {@link RentalAgreement} with details of the tool checkout.
+     * Will throw an exception if the rental day count is less than 1 or
+     * if the discount percent is not a number 0-100.
+     *
+     * @param checkoutDate Date the tool is to be checked out
+     * @param rentalDayCount Amount of days from the day after checkout that the tool is to be rented
+     * @param discountPercent Discount percent represented as a number 0-100
+     * @return A rental agreement from the attributes provided; non-null
+     * @throws IllegalArgumentException
+     */
     public RentalAgreement checkout(LocalDate checkoutDate, int rentalDayCount, int discountPercent) throws IllegalArgumentException {
         if (rentalDayCount < 1) {
             throw new IllegalArgumentException("Rental day count must be greater than 0");
