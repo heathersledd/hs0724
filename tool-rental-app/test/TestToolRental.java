@@ -50,7 +50,9 @@ public class TestToolRental {
         RentalAgreement rentalAgreement = tool.checkout(LocalDate.of(2020, 7, 2), 3, 10);
         System.out.println(rentalAgreement);
 
-        Assert.assertEquals(rentalAgreement.calcFinalCharge(), new BigDecimal("3.58"));
+        Assert.assertEquals(rentalAgreement.getChargeDays(), 2);
+        Assert.assertEquals(rentalAgreement.calcDiscountAmount(), new BigDecimal("0.40"));
+        Assert.assertEquals(rentalAgreement.getFinalCharge(), new BigDecimal("3.58"));
     }
 
     /**
@@ -63,7 +65,9 @@ public class TestToolRental {
         RentalAgreement rentalAgreement = tool.checkout(LocalDate.of(2015, 7, 2), 5, 25);
         System.out.println(rentalAgreement);
 
-        Assert.assertEquals(rentalAgreement.calcFinalCharge(), new BigDecimal("3.35"));
+        Assert.assertEquals(rentalAgreement.getChargeDays(), 3);
+        Assert.assertEquals(rentalAgreement.calcDiscountAmount(), new BigDecimal("1.12"));
+        Assert.assertEquals(rentalAgreement.getFinalCharge(), new BigDecimal("3.35"));
     }
 
     /**
@@ -76,7 +80,9 @@ public class TestToolRental {
         RentalAgreement rentalAgreement = tool.checkout(LocalDate.of(2015, 9, 3), 6, 0);
         System.out.println(rentalAgreement);
 
-        Assert.assertEquals(rentalAgreement.calcFinalCharge(), new BigDecimal("8.97"));
+        Assert.assertEquals(rentalAgreement.getChargeDays(), 3);
+        Assert.assertEquals(rentalAgreement.calcDiscountAmount(), new BigDecimal("0.00"));
+        Assert.assertEquals(rentalAgreement.getFinalCharge(), new BigDecimal("8.97"));
     }
 
     /**
@@ -89,7 +95,9 @@ public class TestToolRental {
         RentalAgreement rentalAgreement = tool.checkout(LocalDate.of(2015, 7, 2), 9, 0);
         System.out.println(rentalAgreement);
 
-        Assert.assertEquals(rentalAgreement.calcFinalCharge(), new BigDecimal("17.94"));
+        Assert.assertEquals(rentalAgreement.getChargeDays(), 6);
+        Assert.assertEquals(rentalAgreement.calcDiscountAmount(), new BigDecimal("0.00"));
+        Assert.assertEquals(rentalAgreement.getFinalCharge(), new BigDecimal("17.94"));
     }
 
     /**
@@ -102,6 +110,8 @@ public class TestToolRental {
         RentalAgreement rentalAgreement = tool.checkout(LocalDate.of(2020, 7, 2), 4, 50);
         System.out.println(rentalAgreement);
 
-        Assert.assertEquals(rentalAgreement.calcFinalCharge(), new BigDecimal("1.50"));
+        Assert.assertEquals(rentalAgreement.getChargeDays(), 1);
+        Assert.assertEquals(rentalAgreement.calcDiscountAmount(), new BigDecimal("1.49"));
+        Assert.assertEquals(rentalAgreement.getFinalCharge(), new BigDecimal("1.50"));
     }
 }
